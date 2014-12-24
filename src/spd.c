@@ -41,15 +41,15 @@ int setSA_pointer(SA* sa)
 					{
 						if(tmp->sa_pointer == NULL)
 						{
-							sa->bundle_list = sa;
+							//sa->bundle_list = sa;
 
-							INIT_LIST_HEAD(&((sa->bundle_list)->list));
+							//INIT_LIST_HEAD(&((sa->bundle_list)->list));
 							tmp->sa_pointer = sa;
 							return 0;
 						}
 						else
 						{
-							list_add_head(&(sa->list), &(tmp->sa_pointer->bundle_list->list));
+							//list_add_head(&(sa->list), &(tmp->sa_pointer->bundle_list->list));
 							return 0;
 						}
 					}

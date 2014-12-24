@@ -1,5 +1,6 @@
 #include "ipsec.h"
 
+
 void init_list()
 {
 	SP* sp_header_node = (SP*)malloc(sizeof(SP));
@@ -23,26 +24,31 @@ int decrypt(IP* packet)
 	ESP* esp;
 	IP* ip;
 
+#ifdef _DEBUG_
 	printf("Decrypt Processing : \n");
+#endif	
 
 	// 1. SAD Lookup
 	if((current_sa = getSA(packet)) == NULL)
 	{
+#ifdef _DEBUG_
 		printf(" 1. SAD Lookup : Discard packet \n");
-	
+#endif	
 		return -1;
 	}
 	
 	current_sa->crypto = get_cryptography(current_sa->esp_crypto_algorithm);
 	current_sa->auth = get_authentication(current_sa->esp_auth_algorithm);
 
+	
 	// 2. Seq# Validation
 	esp = (ESP*)packet->body;
 
 	if(checkWindow(current_sa->window, esp->seq_num) < 0)
 	{
+#ifdef _DEBUG_
 		printf(" 2. Seq# Validation : Dicard Packet \n");
-
+#endif
 		return -1;
 	}
 
@@ -57,8 +63,9 @@ int decrypt(IP* packet)
 	
 		if(memcmp(result, &(packet->body[size]), 12) != 0)
 		{
+#ifdef _DEBUG_
 			printf(" 3. ICV Validation : Discard Packet \n");
-			
+#endif			
 			return -1;
 		}
 	}
@@ -107,11 +114,13 @@ int decrypt(IP* packet)
 	// 6. SPD Lookup 
 	if((current_sp = getSP(packet)) == NULL)
 	{
+#ifdef _DEBUG_
 		printf(" 6. SPD Lookup : Discard packet \n");
-
+#endif
 		return -1;
 	}
 
+#ifdef _DEBUG_
 	printf("Decrypted Packet : \n");
 	
 	Ether* ether = (Ether*)malloc(250);
@@ -126,7 +135,7 @@ int decrypt(IP* packet)
 	printf("\n");
 
 	free(ether);
-	
+#endif	
 	return 0;
 }
 
@@ -137,21 +146,24 @@ int encrypt(IP* packet)
 	current_sp = NULL;
 	current_sa = NULL;
 
+#ifdef _DEBUG_	
 	printf("Encrypt Processing : \n");
-	
+#endif	
 	// 1. SPD Lookup
 	if((current_sp = getSP(packet)) == NULL)
 	{
+#ifdef _DEBUG_	
 		printf(" 1. SPD Lookup : Bypass packet\n");
-		
+#endif		
 		return -1;
 	}
 
 	// 2. SAD Lookup
 	if((current_sa = findSA(current_sp->sa_pointer, current_sp, packet)) == NULL)
 	{
+#ifdef _DEBUG_	
 		printf(" 2. SAD check : Discard packet\n");
-		
+#endif		
 		return -1;
 	}
 	current_sa->crypto = get_cryptography(current_sa->esp_crypto_algorithm);
@@ -210,8 +222,9 @@ int encrypt(IP* packet)
 			//  4.1 IP Header Change
 			if(current_sa->mode == TRANSPORT)
 			{
-				packet->source = endian32(packet->destination);
-				packet->destination = endian32(packet->source);
+			//	uint32_t temp = packet->source;	
+			//	packet->source = packet->destination;
+			//	packet->destination = temp;
 			}
 			else if(current_sa->mode == TUNNEL)
 			{
@@ -255,6 +268,7 @@ int encrypt(IP* packet)
 	}
 
 
+#ifdef _DEBUG_	
 	printf("Encrypted Packet : \n");
 
 	Ether* ether1 = (Ether*)malloc(250);
@@ -269,7 +283,7 @@ int encrypt(IP* packet)
 	printf("\n");
 	
 	free(ether1);
-
+#endif
 	return 0;
 }
 

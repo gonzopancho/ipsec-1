@@ -62,25 +62,26 @@ SA sa2 =
 };*/
 int main(void)
 {
+	
 	setkey_spdflush();
 	setkey_flush(0);
 #ifdef _GW1_
-	setkey_spdadd(0x0c0a86401, 0xc0a8c801, 
-			0xffffff00,0xffffff00,0,0,IP_PROTOCOL_ANY, IN, IPSEC, 
-			IP_PROTOCOL_ESP, TUNNEL, 0xac100002, 0xac100001, 0);    
+	setkey_spdadd(0xc0a80a99/*192.168.10.152*/, 0xc0a80a96 /*192.168.10.150*/,
+			0xffffffff, 0xffffffff,0,0, IP_PROTOCOL_ANY, IN, IPSEC, 
+			IP_PROTOCOL_ESP, TRANSPORT, 0, 0, 0);    
 
-	setkey_spdadd(0x0c0a8c801, 0xc0a86401, 
-			0xffffff00,0xffffff00,0,0, IP_PROTOCOL_ANY, OUT, IPSEC, 
-			IP_PROTOCOL_ESP, TUNNEL, 0xac100001, 0xac100002, 0);    
+	setkey_spdadd(0xc0a80a96/*192.168.10.150*/, 0xc0a80a99/*192.168.10.152*/, 
+			0xffffffff, 0xffffffff, 0,0, IP_PROTOCOL_ANY, OUT, IPSEC, 
+			IP_PROTOCOL_ESP, TRANSPORT, 0, 0, 0);    
 #endif
 #ifdef _GW2_
-	setkey_spdadd(0x0c0a86401, 0xc0a8c801, 
-			0xffffff00,0xffffff00,0,0,IP_PROTOCOL_ANY, OUT, IPSEC, 
-			IP_PROTOCOL_ESP, TUNNEL, 0xac100002, 0xac100001, 0);    
+//	setkey_spdadd(0x0/*0x0c0a86401*/, 0xc0a8c801, 
+//			0x0/*0xffffff00*/,0xffffff00,0,0,IP_PROTOCOL_ANY, OUT, IPSEC, 
+//			IP_PROTOCOL_ESP, TUNNEL, 0xac100002, 0xac100001, 0);    
 
-	setkey_spdadd(0x0c0a8c801, 0xc0a86401, 
-			0xffffff00,0xffffff00,0,0, IP_PROTOCOL_ANY, IN, IPSEC, 
-			IP_PROTOCOL_ESP, TUNNEL, 0xac100001, 0xac100002, 0);    
+//	setkey_spdadd(0x0c0a8c801, 0x0/*0xc0a86401*/, 
+//			0xffffff00,0x0/*0xffffff00*/,0,0, IP_PROTOCOL_ANY, IN, IPSEC, 
+//			IP_PROTOCOL_ESP, TUNNEL, 0xac100001, 0xac100002, 0);    
 #endif
 
 	uint64_t crypto_key[3] = 
@@ -99,13 +100,13 @@ int main(void)
 		0xaeaeaeaeaeaeaeae,
 	};
 
-	setkey_add(0xac100001, 0xac100002, 
-			IP_PROTOCOL_ESP, 0x201, TUNNEL, CRYPTO_3DES_CBC, 
-			AUTH_HMAC_SHA384, crypto_key, auth_key);
+	setkey_add(0xc0a80a96, 0xc0a80a99, 
+			IP_PROTOCOL_ESP, 0x201, TRANSPORT, CRYPTO_3DES_CBC, 
+			0, crypto_key, auth_key);
 
-	setkey_add(0xac100002, 0xac100001,
-			IP_PROTOCOL_ESP, 0x301, TUNNEL, CRYPTO_3DES_CBC, 
-			AUTH_HMAC_SHA384, crypto_key, auth_key);
+	setkey_add(0xc0a80a99, 0xc0a80a96,
+			IP_PROTOCOL_ESP, 0x301, TRANSPORT, CRYPTO_3DES_CBC, 
+			0, crypto_key, auth_key);
 	
 	setkey_spddump();
 	setkey_dump(0);

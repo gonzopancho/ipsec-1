@@ -1,0 +1,23 @@
+.PHONY: run all clean
+#-nostdinc 
+CFLAGS = -fno-stack-protector -I ../../include -g -O0 -Wall -m64 -ffreestanding -std=gnu99 -Werror   
+
+DIR = obj 
+
+OBJS = obj/test.o
+
+LIBS = --start-group ../../lib/libpacketngin.a ../../lib/libcrypto.a ../../lib/libssl.a --end-group
+
+all: $(OBJS)
+	ld -melf_x86_64 -nostdlib -e main -o main $^ $(LIBS)
+
+obj/test.o: src/test.c
+	mkdir -p $(DIR)
+	gcc $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -rf obj
+	rm -f main
+
+run: all 
+	./console script.bak

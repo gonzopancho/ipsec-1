@@ -1,4 +1,5 @@
-connect 192.168.200.254
-$vmid = vm_create core: 1 memory: 0x1000000 storage: 0x200000 nic: mac: 0 ibuf: 1024 obuf: 1024 iband: 1000000000 oband: 1000000000 pool: 0x400000 nic: mac: 0 ibuf: 1024 obuf: 1024 iband: 1000000000 oband: 1000000000 pool: 0x400000 args: hello world
+connect 192.168.10.151
+$vmid = create core: 1 memory: 0x1000000 storage: 0x200000 nic: mac: 0x002233445566 ibuf: 1024 obuf: 1024 iband: 1000000000 oband: 1000000000 pool: 0x400000 nic: mac: 0x005544332211 ibuf: 1024 obuf: 1024 iband: 1000000000 oband: 1000000000 pool: 0x400000 args: hello world
 send $vmid main
-status_set $vmid start
+start $vmid 
+

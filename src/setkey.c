@@ -328,7 +328,7 @@ int setkey_spddump()
 		printf("Upperspec : %x\n", tmp->upperspec);
 		printf("Direction ( 1: IN,  2: OUT ) : %d \n", tmp->direction);
 		printf("Level : %x\n", tmp->level);
-		printf("SA Pointer (SPI) : %x\n", tmp->sa_pointer->spi);
+	//	printf("SA Pointer (SPI) : %x\n", tmp->sa_pointer->spi);
 		printf("\n");
 	}
 	return 0;

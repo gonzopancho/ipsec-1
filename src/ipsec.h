@@ -12,6 +12,9 @@
 #include "crypto.h"
 #include "auth.h"
 #include "receiver.h"
+#include "clock.h"
+#include "packetviewer.h"
+
 
 #define true 	1
 #define false 	0
@@ -23,9 +26,9 @@ int decrypt(IP* packet);
 SP* current_sp;
 SA* current_sa;
 
+extern Window window;
 
 #endif /* __IPSEC_H__ */
 
 
-extern Window window;
 

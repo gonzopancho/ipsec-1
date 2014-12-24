@@ -1,11 +1,10 @@
-.PHONY: run all depend clean
+.PHONY: run all clean
 #-nostdinc 
-CFLAGS = -I ../../include -I -O2 -Wall -m64 -ffreestanding -std=gnu99 -Werror -D_GW1_ 
+CFLAGS = -I ../../include -I -O0 -Wall -m64 -ffreestanding -std=gnu99 -Werror -D_GW1_ -D_TRANSPORT_ #-D_DEBUG_ #-D_PACKETVIEWER_   
 
 DIR = obj 
 
-OBJS = obj/sad.o obj/spd.o obj/crypto.o obj/auth.o obj/main.o obj/window.o obj/ipsec.o obj/receiver.o obj/setkey.o 
-#OBJS = obj/SA.o obj/SAD.o obj/SPD.o obj/authenticator.o obj/decryptor.o obj/encryptor.o obj/s_window.o obj/IPSec_module.o obj/main.o
+OBJS = obj/sad.o obj/spd.o obj/crypto.o obj/auth.o obj/test.o obj/window.o obj/ipsec.o obj/receiver.o obj/setkey.o obj/clock.o obj/packetviewer.o
 
 LIBS = --start-group ../../lib/libpacketngin.a ../../lib/libcrypto.a ../../lib/libssl.a --end-group
 
@@ -16,12 +15,10 @@ obj/%.o: src/%.c
 	mkdir -p $(DIR)
 	gcc $(CFLAGS) -c -o $@ $<
 
-#depend : 
-#	gccmakedep $(CFALGS) src/*.c 
-
 clean:
 	rm -rf obj
 	rm -f main
 
 run: all 
-	../../bin/console script
+	./console script
+#	../../bin/console script

@@ -25,8 +25,8 @@
 #define SETKEY_SPDDUMP		0x15
 
 #ifdef _GW1_
-#define IPSEC_ADDR			"192.168.200.10"
-#define IPSEC_PORT	 		1234
+#define IPSEC_ADDR		    "192.168.10.153"
+#define IPSEC_PORT	 		1234	
 #endif
 #ifdef _GW2_
 #define IPSEC_ADDR			"192.168.100.10"
